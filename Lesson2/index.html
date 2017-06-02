@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+    <head>
+        <title>Lesson 2</title>
+    </head>
+    <body>
+      <input type="text" id="query" />
+      <img src="" id="hero" />
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+        <script type="text/javascript">
+          var images = [
+            {
+              "name": "AJ",
+              "url": "http://anuragbanerjee.me/assets/headshots/03-AJ.jpg"
+            }, {
+              "name": "Paul",
+              "url": "http://thepaulhwang.com/myface.png"
+            }
+          ];
+
+          $("#query").on("change", function() {
+            var search = $("#query").val();
+            var results = images.filter(function(img) {
+              return img.name === search;
+            });
+            if (results.length === 0) {
+              alert("boo");
+            } else {
+              var first_result = results[0];
+              $("img#hero").attr("src", first_result.url);
+            }
+          })
+        </script>
+    </body>
+</html>
