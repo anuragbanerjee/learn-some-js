@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Learn Some JS</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="bower_components/normalize-css/normalize.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <style type="text/css">
+
+         body {
+          font-family: Helvetica;
+         }
+
+          iframe {
+            border: 0;
+          }
+
+          #main {
+            display: flex;
+            overflow: hidden;
+          }
+
+          .panel {
+            flex: 1;
+            padding: 20px;
+            height: calc(100vh - 40px);
+          }
+
+          #detail {
+            display: flex;
+            flex-direction: column;
+            background: #EEEEEE;
+            max-width: 320px;
+          }
+
+          #detail-text {
+            flex: 1;
+            align-items: center;
+          }
+
+          #detail-nav {
+            text-align: center;
+            display: flex;
+          }
+
+          #detail-nav a {
+            text-decoration: none;
+            flex: 1;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-left: -1px;
+          }
+
+          #preview {
+            flex: 1;
+          }
+
+          #source {
+            padding: 0;
+            background: #2b303b;
+            height: 100vh;
+          }
+
+          #source pre {
+            margin: 0;
+          }
+
+          li {
+            margin-bottom: 10px;
+          }
+
+        </style>
+
+        <div id="main">
+          <div id="detail" class="panel">
+            <div id="detail-text">
+            </div>
+            <div id="detail-nav">
+              <a href="#1">←</a>
+              <a href="#3">→</a>
+            </div>
+          </div>
+          <iframe id="preview" class="panel" src="Lesson2/index.html">1</iframe>
+          <div id="source" class="panel">
+            <pre><code></code></pre>
+          </div>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/ocean.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+        <script type="text/javascript">
+
+          function getLesson(lesson_number) {
+            var endpoint_code = "Lesson" + lesson_number + "/index.html";
+            var endpoint_text = "Lesson" + lesson_number + "/text.html";
+            $.get(endpoint_code, function(res) {
+              $("iframe").attr("src", endpoint_code);
+
+              var source = $("#source pre code");
+
+              source.text(res);
+              source.each(function(i, block) {
+                hljs.highlightBlock(block);
+              });
+            }).fail(function() {
+              alert("Error: lesson not found.");
+              var previous_lesson_number = Number(lesson_number) - 1;
+              window.location.hash ="#" + previous_lesson_number;
+            });
+
+            $.get(endpoint_text, function(res) {
+              var text = $("#detail-text");
+              text.html(res);
+            });
+          }
+
+          function updateDetails(lesson_number) {
+            var previous = $("#detail-nav a").first();
+            var next = $("#detail-nav a").last();
+
+            if (lesson_number - 1 <= 0) {
+              previous.hide();
+            } else {
+              previous.show();
+            }
+
+            if (lesson_number >= 3) {
+              next.hide();
+            } else {
+              next.show();
+            }
+
+            previous.attr("href", "#" + (lesson_number-1));
+            next.attr("href", "#" + (lesson_number+1));
+          }
+
+          window.onhashchange = function () {
+            var lesson_number = Number(window.location.hash.split("#")[1]);
+            getLesson(lesson_number);
+            updateDetails(lesson_number);
+          }
+
+          $(function(){
+            var lesson_number = window.location.hash;
+            if (lesson_number == "" || lesson_number == "#NaN") {
+              window.location.hash = "#1";
+            } else {
+              window.onhashchange();
+            }
+          });
+
+        </script>
+
+    </body>
+</html>
