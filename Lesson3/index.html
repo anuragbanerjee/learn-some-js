@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+    <head>
+        <title>Lesson 3</title>
+    </head>
+    <body>
+        <div id="response">
+          filler text
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript">
+          $.ajax({
+            url: "https://ghibliapi.herokuapp.com/films",
+            method: "GET",
+            success: function (response) {
+              var data = response.filter(function(film) {
+                return film.director === "Hayao Miyazaki";
+              }).map(function(film) {
+                return "<h4>" + film.title + "</h4>" + film.description + "<br><hr>";
+              }).reduce(function(next, start) {
+                return next + start;
+              });
+
+              $("#response").html(data);
+            }
+          });
+        </script>
+    </body>
+</html>

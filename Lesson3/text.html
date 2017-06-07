@@ -1,0 +1,23 @@
+<style type="text/css">
+  #preview {
+    /* display: none; */
+  }
+</style>
+<h2>Lesson 3</h2>
+<p>
+In this lesson, we're going to learn AJAX. AJAX means "Asynchronous JavaScript and XML," and it's really a web standard popularized by Google. It allows you to get data and send data on a website without refreshing the entire page all over again. You can just get and send the data you need as you need it.
+<br>
+<br>
+There's a security issue if you just open the HTML file and it tries to run AJAX, so we need to spin up a basic local server. Go to where this repo is and run:
+<pre><code>python -m SimpleHTTPServer</code></pre>
+Now in a browser, you can see the website at <a href="http://localhost:8000">localhost:8000</a>.
+<br>
+<br>
+The default syntax is <pre><code>$.ajax({
+  url: "http://...",
+  method: "GET",
+  success: function (data) {
+    // do something with data
+  }
+});</code></pre>
+</p>
