@@ -66,12 +66,15 @@
 
           #preview {
             flex: 1;
+            max-width: 25%;
+            overflow-y: auto;
           }
 
           #source {
             padding: 0;
             background: #2b303b;
             height: 100vh;
+            max-width: 50%;
           }
 
           #source pre {
@@ -82,19 +85,30 @@
             margin-bottom: 10px;
           }
 
+          #preview_button {
+            padding: 10px;
+            border: 1px solid #cccccc;
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: center;
+            background: #03A9F4;
+            color: white;
+          }
+
         </style>
 
         <div id="main">
           <div id="detail" class="panel">
             <div id="detail-text">
             </div>
+            <span id="preview_button">preview</span>
             <div id="detail-nav">
               <a href="#1">←</a>
               <a href="#3">→</a>
             </div>
           </div>
-          <iframe id="preview" class="panel" src="Lesson2/index.html">1</iframe>
-          <div id="source" class="panel">
+          <div id="preview" class="panel"></div>
+          <div id="source" class="panel" contenteditable="true">
             <pre><code></code></pre>
           </div>
         </div>
@@ -109,10 +123,10 @@
         <script type="text/javascript">
 
           function getLesson(lesson_number) {
-            var endpoint_code = "Lesson" + lesson_number + "/index.html";
-            var endpoint_text = "Lesson" + lesson_number + "/text.html";
+            var endpoint_code = "Lesson" + lesson_number + "/index.html?" + Date.now();
+            var endpoint_text = "Lesson" + lesson_number + "/text.html?" + Date.now();
             $.get(endpoint_code, function(res) {
-              $("iframe").attr("src", endpoint_code);
+              $("#preview").html(res);
 
               var source = $("#source pre code");
 
@@ -123,7 +137,11 @@
             }).fail(function() {
               alert("Error: lesson not found.");
               var previous_lesson_number = Number(lesson_number) - 1;
-              window.location.hash ="#" + previous_lesson_number;
+              if (previous_lesson_number < 0) {
+                window.location.hash = "#1"
+              } else {
+                window.location.hash ="#" + previous_lesson_number;
+              }
             });
 
             $.get(endpoint_text, function(res) {
@@ -156,15 +174,28 @@
             var lesson_number = Number(window.location.hash.split("#")[1]);
             getLesson(lesson_number);
             updateDetails(lesson_number);
+
           }
 
-          $(function(){
+          $(document).ready(function(){
             var lesson_number = window.location.hash;
             if (lesson_number == "" || lesson_number == "#NaN") {
               window.location.hash = "#1";
             } else {
               window.onhashchange();
             }
+
+            // setInterval(function(){
+              $('#preview_button').click(function(i, block){
+                hljs.highlightBlock($("#source")[0]);
+                $("#preview").html($("#source").text());
+              })
+              // }));
+            // }, 1000);
+
+            // setInterval(function(){
+            //   getLesson(3);
+            // }, 1000);
           });
 
         </script>
